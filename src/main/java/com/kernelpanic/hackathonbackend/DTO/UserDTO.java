@@ -7,5 +7,7 @@ public record UserDTO(
         String email,
         String name,
         String cep,
-        String phoneNumber
+        String phoneNumber,
+        double latitude,
+        double longitude
 ) {}
