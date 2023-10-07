@@ -36,17 +36,17 @@ public class UserService {
                 ));
     }
 
-    public void updateUser(String username, String password, Long userId) {
+    public void updateUser(String email, String password, Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "user with id [%s] not found".formatted(userId)
                 ));
 
-        if(username != null) {
-            if (userRepository.existsByUsername(username)) {
-                throw new DuplicateResourceException("username \"%s\" taken".formatted(username));
+        if(email != null) {
+            if (userRepository.existsByEmail(email)) {
+                throw new DuplicateResourceException("email \"%s\" taken".formatted(email));
             }
-            user.setUsername(username);
+            user.setEmail(email);
         }
         if(password != null) {
             user.setPassword(passwordEncoder.encode(password));

@@ -1,6 +1,6 @@
 package com.kernelpanic.hackathonbackend.DTO;
 
 public record AuthenticationRequestDTO(
-        String username,
+        String email,
         String password
 ) {}

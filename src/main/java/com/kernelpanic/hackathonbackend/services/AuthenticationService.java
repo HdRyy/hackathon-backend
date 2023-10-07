@@ -25,8 +25,11 @@ public class AuthenticationService {
 
     public AuthenticationResponseDTO register(RegisterRequestDTO req) {
         var user = User.builder()
-                .username(req.username())
+                .email(req.email())
                 .password(passwordEncoder.encode(req.password()))
+                .name(req.name())
+                .cep(req.cep())
+                .phoneNumber(req.phoneNumber())
                 .role(Role.USER)
                 .build();
         userRepository.save(user);
@@ -38,11 +41,11 @@ public class AuthenticationService {
     public AuthenticationResponseDTO login(AuthenticationRequestDTO req) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        req.username(),
+                        req.email(),
                         req.password()
                 )
         );
-        var user = userRepository.findByUsername(req.username())
+        var user = userRepository.findByEmail(req.email())
                 .orElseThrow(() -> new ResourceNotFoundException("user not found"));
         var jwtToken = jwtService.generateToken(user);
         return new AuthenticationResponseDTO(jwtToken);

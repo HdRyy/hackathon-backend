@@ -29,10 +29,10 @@ public class UserController {
 
     @PutMapping(path = "/{userId}")
     public ResponseEntity<?> updateUser(
-            @RequestParam(required = false) String username,
+            @RequestParam(required = false) String email,
             @RequestParam(required = false) String password,
             @PathVariable("userId") Long userId){
-        userService.updateUser(username, password, userId);
+        userService.updateUser(email, password, userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

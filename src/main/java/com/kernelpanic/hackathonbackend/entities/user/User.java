@@ -22,7 +22,7 @@ public class User implements UserDetails {
     private Long id;
 
     @Column(unique = true, nullable = false)
-    private String username;
+    private String email;
 
     @Column(nullable = false)
     private String password;
@@ -31,14 +31,26 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private Role role;
 
-    public User(String username, String password) {
-        this.username = username;
+    @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false)
+    private String cep;
+
+    @Column(nullable = false)
+    private String phoneNumber;
+
+    public User(String email, String password, String name, String cep, String phoneNumber) {
+        this.email = email;
         this.password = password;
+        this.name = name;
+        this.cep = cep;
+        this.phoneNumber = phoneNumber;
     }
 
     public void setUsername(String username) {
-        if(!username.trim().isEmpty()) {
-            this.username = username;
+        if(!email.trim().isEmpty()) {
+            this.email = email;
         }
     }
 
@@ -50,7 +62,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return username;
+        return email;
     }
 
     @Override
