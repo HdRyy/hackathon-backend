@@ -26,7 +26,6 @@ public class AuthenticationService {
 
         CepResponse cepResponse = cepService.getCepDetails(req.cep());
         Coordinates coordinates = cepResponse.getLocation().getCoordinates();
-        System.out.print(cepResponse);
 
         var user = User.builder()
                 .email(req.email())
