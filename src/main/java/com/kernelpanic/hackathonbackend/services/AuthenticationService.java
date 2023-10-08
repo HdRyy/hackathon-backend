@@ -1,8 +1,6 @@
 package com.kernelpanic.hackathonbackend.services;
 
-import com.kernelpanic.hackathonbackend.DTO.AuthenticationRequestDTO;
-import com.kernelpanic.hackathonbackend.DTO.AuthenticationResponseDTO;
-import com.kernelpanic.hackathonbackend.DTO.RegisterRequestDTO;
+import com.kernelpanic.hackathonbackend.DTO.*;
 import com.kernelpanic.hackathonbackend.entities.user.Role;
 import com.kernelpanic.hackathonbackend.entities.user.User;
 import com.kernelpanic.hackathonbackend.exceptions.ResourceNotFoundException;
@@ -22,8 +20,13 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final CepService cepService;
 
     public AuthenticationResponseDTO register(RegisterRequestDTO req) {
+
+        CepResponse cepResponse = cepService.getCepDetails(req.cep());
+        Coordinates coordinates = cepResponse.getLocation().getCoordinates();
+
         var user = User.builder()
                 .email(req.email())
                 .password(passwordEncoder.encode(req.password()))
@@ -31,11 +34,13 @@ public class AuthenticationService {
                 .cep(req.cep())
                 .phoneNumber(req.phoneNumber())
                 .role(Role.USER)
+                .latitude(Double.parseDouble(coordinates.getLatitude()))
+                .longitude(Double.parseDouble(coordinates.getLongitude()))
                 .build();
         userRepository.save(user);
 
         var jwtToken = jwtService.generateToken(user);
-        return new AuthenticationResponseDTO(jwtToken);
+        return new AuthenticationResponseDTO(jwtToken, user.getId());
     }
 
     public AuthenticationResponseDTO login(AuthenticationRequestDTO req) {
@@ -48,6 +53,6 @@ public class AuthenticationService {
         var user = userRepository.findByEmail(req.email())
                 .orElseThrow(() -> new ResourceNotFoundException("user not found"));
         var jwtToken = jwtService.generateToken(user);
-        return new AuthenticationResponseDTO(jwtToken);
+        return new AuthenticationResponseDTO(jwtToken, user.getId());
     }
 }

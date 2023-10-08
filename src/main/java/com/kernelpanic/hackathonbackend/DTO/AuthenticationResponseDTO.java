@@ -1,5 +1,6 @@
 package com.kernelpanic.hackathonbackend.DTO;
 
 public record AuthenticationResponseDTO(
-        String token
+        String token,
+        Long Id
 ) {}

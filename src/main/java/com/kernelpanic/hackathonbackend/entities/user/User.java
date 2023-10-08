@@ -40,6 +40,12 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String phoneNumber;
 
+    @Column(nullable = false)
+    private double latitude;
+
+    @Column(nullable = false)
+    private double longitude;
+
     public User(String email, String password, String name, String cep, String phoneNumber) {
         this.email = email;
         this.password = password;
