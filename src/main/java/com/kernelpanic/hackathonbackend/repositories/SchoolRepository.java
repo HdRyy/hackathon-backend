@@ -9,7 +9,5 @@ import java.util.List;
 
 public interface SchoolRepository extends JpaRepository<School, Long> {
     boolean existsByEmail(String email);
-    @Query(value = "SELECT * FROM schools s WHERE ST_DWithin(ST_MakePoint(s.latitude, s.longitude), ST_MakePoint(?1, ?2), ?3)  ORDER BY ST_Distance(ST_MakePoint(s.latitude, s.longitude), ST_MakePoint(?1, ?2))", nativeQuery = true)
-    List<School> findSchoolsWithinDistance(double latitude, double longitude, double distance);
 
 }

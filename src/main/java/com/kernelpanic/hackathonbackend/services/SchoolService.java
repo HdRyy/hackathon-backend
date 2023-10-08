@@ -5,7 +5,6 @@ import com.kernelpanic.hackathonbackend.DTO.Coordinates;
 import com.kernelpanic.hackathonbackend.DTO.UserDTO;
 import com.kernelpanic.hackathonbackend.DTO.mappers.UserDTOMapper;
 import com.kernelpanic.hackathonbackend.entities.school.School;
-import com.kernelpanic.hackathonbackend.entities.user.User;
 import com.kernelpanic.hackathonbackend.exceptions.DuplicateResourceException;
 import com.kernelpanic.hackathonbackend.exceptions.ResourceNotFoundException;
 import com.kernelpanic.hackathonbackend.repositories.SchoolRepository;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -32,7 +30,28 @@ public class SchoolService {
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "user with id [%s] not found".formatted(userId)
                 ));
-        return schoolRepository.findSchoolsWithinDistance(user.latitude(), user.longitude(), distance);
+
+        ArrayList<School> schoolsWithinRange = new ArrayList<School>();
+        List<School> schools = schoolRepository.findAll();
+
+        for(School school:schools){
+            double earthRadius = 3958.75;
+            double dLat = Math.toRadians(school.getLatitude()-user.latitude());
+            double dLng = Math.toRadians(school.getLongitude()-user.longitude());
+            double sindLat = Math.sin(dLat / 2);
+            double sindLng = Math.sin(dLng / 2);
+            double a = Math.pow(sindLat, 2) + Math.pow(sindLng, 2)
+                    * Math.cos(Math.toRadians(user.latitude())) * Math.cos(Math.toRadians(school.getLatitude()));
+            double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            double dist = earthRadius * c;
+
+            System.out.println(dist);
+
+            if(dist < distance){
+                schoolsWithinRange.add(school);
+            }
+        }
+        return schoolsWithinRange;
     }
 
     public List<School> getAllSchools() {
