@@ -21,13 +21,16 @@ public class School {
     @Column(nullable = false)
     private String cep;
     @Column(nullable = false)
+    private String cellPhone;
+    @Column(nullable = false)
     private double latitude;
     @Column(nullable = false)
     private double longitude;
 
-    public School(String email, String name, String cep) {
+    public School(String email, String name, String cep, String cellPhone) {
         this.email = email;
         this.name = name;
         this.cep = cep;
+        this.cellPhone = cellPhone;
     }
 }
